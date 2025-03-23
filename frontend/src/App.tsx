@@ -3,6 +3,7 @@ import './App.css'
 import { API_BASE_URL } from './types'
 import ApiStatus from './components/ApiStatus';
 import UTMGenerator from './components/UTMGenerator';
+import Settings from './components/Settings';
 
 // Types
 interface VideoMetrics {
@@ -119,6 +120,9 @@ function App() {
         <div className="mb-8">
           <ApiStatus />
         </div>
+        
+        {/* Settings Component */}
+        <Settings />
       
         {loading ? (
           <div className="text-center py-12">

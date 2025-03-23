@@ -1,7 +1,7 @@
 services:
   # Backend Web Service
   - type: web
-    name: insyte-io-api
+    name: insyte-io-scalingprofits-api
     env: python
     region: oregon # or your preferred region
     buildCommand: pip install -r requirements.txt
@@ -12,6 +12,12 @@ services:
         value: production
       - key: YOUTUBE_API_KEY
         sync: false # This will need to be manually set in Render dashboard
+      - key: YOUTUBE_CLIENT_ID
+        sync: false # Set this in the Render dashboard
+      - key: YOUTUBE_CLIENT_SECRET
+        sync: false # Set this in the Render dashboard
+      - key: YOUTUBE_REDIRECT_URI
+        value: https://insyte-io-scalingprofits-api.onrender.com/api/v1/auth/youtube/callback
       - key: STRIPE_API_KEY
         sync: false
       - key: STRIPE_WEBHOOK_SECRET
@@ -28,10 +34,14 @@ services:
         fromDatabase:
           name: insyte-db
           property: connectionString
+      - key: BASE_URL
+        value: https://insyte-io-scalingprofits-api.onrender.com
+      - key: FRONTEND_URL
+        value: https://insyte-io-scalingprofits.onrender.com
 
   # Background Worker
   - type: worker
-    name: insyte-io-worker
+    name: insyte-io-scalingprofits-worker
     env: python
     region: oregon # or your preferred region
     buildCommand: pip install -r requirements.txt
@@ -42,6 +52,12 @@ services:
         value: production
       - key: YOUTUBE_API_KEY
         sync: false # This will need to be manually set in Render dashboard
+      - key: YOUTUBE_CLIENT_ID
+        sync: false # Set this in the Render dashboard
+      - key: YOUTUBE_CLIENT_SECRET
+        sync: false # Set this in the Render dashboard
+      - key: YOUTUBE_REDIRECT_URI
+        value: https://insyte-io-scalingprofits-api.onrender.com/api/v1/auth/youtube/callback
       - key: STRIPE_API_KEY
         sync: false
       - key: STRIPE_WEBHOOK_SECRET
@@ -58,16 +74,18 @@ services:
         fromDatabase:
           name: insyte-db
           property: connectionString
+      - key: BASE_URL
+        value: https://insyte-io-scalingprofits-api.onrender.com
 
   # Frontend Static Site - using web type with static runtime
   - type: web
-    name: insyte-io-frontend
+    name: insyte-io-scalingprofits
     env: static
     buildCommand: cd frontend && npm install && npm run build:prod
     staticPublishPath: ./frontend/dist
     envVars:
       - key: VITE_API_URL
-        value: https://insyte-io-api.onrender.com
+        value: https://insyte-io-scalingprofits-api.onrender.com
 
 databases:
   - name: insyte-db

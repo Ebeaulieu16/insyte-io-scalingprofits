@@ -22,6 +22,11 @@ CALENDLY_API_KEY = os.getenv("CALENDLY_API_KEY")
 CALENDLY_WEBHOOK_SECRET = os.getenv("CALENDLY_WEBHOOK_SECRET")
 CALCOM_API_KEY = os.getenv("CALCOM_API_KEY")
 
+# YouTube OAuth
+YOUTUBE_CLIENT_ID = os.getenv("YOUTUBE_CLIENT_ID")
+YOUTUBE_CLIENT_SECRET = os.getenv("YOUTUBE_CLIENT_SECRET")
+YOUTUBE_REDIRECT_URI = os.getenv("YOUTUBE_REDIRECT_URI", "http://localhost:8001/api/v1/auth/youtube/callback")
+
 # Security
 SECRET_KEY = os.getenv("SECRET_KEY", "default-insecure-key")
 # Authentication settings

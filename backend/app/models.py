@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, Text
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, Text, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from datetime import datetime
@@ -66,4 +66,24 @@ class Link(Base):
     title = Column(String, index=True)
     slug = Column(String, unique=True, index=True)
     destination_url = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow) 
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+# YouTube OAuth Token Storage
+class YouTubeToken(Base):
+    __tablename__ = "youtube_tokens"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    access_token = Column(String)
+    refresh_token = Column(String)
+    token_type = Column(String, default="Bearer")
+    expires_at = Column(DateTime)
+    scope = Column(String)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def is_expired(self):
+        """Check if the token is expired."""
+        if not self.expires_at:
+            return True
+        return datetime.utcnow() > self.expires_at 

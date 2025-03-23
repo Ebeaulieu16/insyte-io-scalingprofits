@@ -26,7 +26,7 @@ from app.database import engine
 from app.models import Base
 
 # Import the routes
-from app.routes import dashboard, links, redirect, webhooks, status
+from app.routes import dashboard, links, redirect, webhooks, status, auth
 
 # Set up logging
 logging.basicConfig(
@@ -74,6 +74,7 @@ app.include_router(links.router)
 app.include_router(redirect.router)
 app.include_router(webhooks.router)
 app.include_router(status.router)
+app.include_router(auth.router)
 
 @app.get("/")
 def read_root():
