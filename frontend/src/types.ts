@@ -40,5 +40,5 @@ export interface NewLink {
   slug?: string;
 }
 
-// API configuration
-export const API_BASE_URL = 'http://127.0.0.1:8001'; 
+// API configuration - use environment variable if available
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8001'; 
