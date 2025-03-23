@@ -6,8 +6,7 @@ import json
 from app.config import (
     YOUTUBE_API_KEY,
     STRIPE_API_KEY,
-    CALENDLY_API_KEY,
-    CALCOM_API_KEY
+    CALENDLY_API_KEY
 )
 
 # Set up logging
@@ -158,54 +157,6 @@ def check_calendly_api() -> Dict[str, Any]:
             "message": f"Connection error: {str(e)}"
         }
 
-def check_calcom_api() -> Dict[str, Any]:
-    """
-    Check if the Cal.com API key is valid and working
-    
-    Returns:
-        Dict with status and details
-    """
-    if not CALCOM_API_KEY:
-        return {
-            "service": "Cal.com API",
-            "status": "not_configured",
-            "message": "API key not configured"
-        }
-    
-    try:
-        # Cal.com API endpoint might vary, this is a placeholder
-        url = "https://api.cal.com/v1/me"
-        headers = {
-            "Authorization": f"Bearer {CALCOM_API_KEY}"
-        }
-        
-        response = requests.get(url, headers=headers)
-        
-        if response.status_code == 200:
-            return {
-                "service": "Cal.com API",
-                "status": "ok",
-                "message": "API connection successful"
-            }
-        elif response.status_code == 401:
-            return {
-                "service": "Cal.com API",
-                "status": "error",
-                "message": "Invalid API key"
-            }
-        else:
-            return {
-                "service": "Cal.com API",
-                "status": "error",
-                "message": f"API error: {response.status_code}"
-            }
-    except Exception as e:
-        return {
-            "service": "Cal.com API",
-            "status": "error", 
-            "message": f"Connection error: {str(e)}"
-        }
-
 def check_all_apis() -> List[Dict[str, Any]]:
     """
     Check all configured APIs and return their status
@@ -218,6 +169,5 @@ def check_all_apis() -> List[Dict[str, Any]]:
     results.append(check_youtube_api())
     results.append(check_stripe_api())
     results.append(check_calendly_api())
-    results.append(check_calcom_api())
     
     return results 
