@@ -1,0 +1,76 @@
+services:
+  # Backend Web Service
+  - type: web
+    name: insyte-io-api
+    env: python
+    region: oregon # or your preferred region
+    buildCommand: pip install -r requirements.txt
+    startCommand: bash backend/render-start.sh
+    plan: free
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: YOUTUBE_API_KEY
+        sync: false # This will need to be manually set in Render dashboard
+      - key: STRIPE_API_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: CALENDLY_API_KEY
+        sync: false
+      - key: CALENDLY_WEBHOOK_SECRET
+        sync: false
+      - key: CALCOM_API_KEY
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: insyte-db
+          property: connectionString
+
+  # Background Worker
+  - type: worker
+    name: insyte-io-worker
+    env: python
+    region: oregon # or your preferred region
+    buildCommand: pip install -r requirements.txt
+    startCommand: bash backend/render-worker.sh
+    plan: free
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: YOUTUBE_API_KEY
+        sync: false # This will need to be manually set in Render dashboard
+      - key: STRIPE_API_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: CALENDLY_API_KEY
+        sync: false
+      - key: CALENDLY_WEBHOOK_SECRET
+        sync: false
+      - key: CALCOM_API_KEY
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: insyte-db
+          property: connectionString
+
+  # Frontend Static Site
+  - type: web
+    name: insyte-io
+    env: static
+    buildCommand: cd frontend && npm install && npm run build:prod
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://insyte-io-api.onrender.com
+
+databases:
+  - name: insyte-db
+    databaseName: insyte
+    user: insyte
+    plan: free 
