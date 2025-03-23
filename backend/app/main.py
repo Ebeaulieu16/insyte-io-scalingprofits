@@ -2,6 +2,7 @@ import sys
 import os
 import importlib.util
 from pathlib import Path
+import logging
 
 # Add the parent directory to sys.path to allow absolute imports
 parent_dir = str(Path(__file__).resolve().parent.parent)
@@ -16,7 +17,8 @@ from app.config import (
     APP_NAME, 
     APP_DESCRIPTION, 
     APP_VERSION, 
-    CORS_ORIGINS
+    CORS_ORIGINS,
+    IS_PRODUCTION
 )
 
 # Import directly from the model files
@@ -26,8 +28,30 @@ from app.models import Base
 # Import the routes
 from app.routes import dashboard, links, redirect, webhooks, status
 
-# Create tables
-Base.metadata.create_all(bind=engine)
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
+
+logger = logging.getLogger(__name__)
+
+# Create tables - with error handling for production databases
+try:
+    logger.info("Attempting to create database tables...")
+    Base.metadata.create_all(bind=engine)
+    logger.info("Database tables created successfully")
+except Exception as e:
+    logger.error(f"Error creating database tables: {e}")
+    if IS_PRODUCTION:
+        logger.warning("In production environment, database migrations should be handled carefully")
+        logger.warning("Consider using Alembic for database migrations in production")
+    else:
+        # In development, we can re-raise the error
+        raise
 
 app = FastAPI(
     title=APP_NAME,
