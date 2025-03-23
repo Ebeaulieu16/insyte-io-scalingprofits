@@ -59,9 +59,10 @@ services:
           name: insyte-db
           property: connectionString
 
-  # Frontend Static Site - using a different name to avoid conflicts
-  - type: static
+  # Frontend Static Site - using web type with static runtime
+  - type: web
     name: insyte-io-frontend
+    env: static
     buildCommand: cd frontend && npm install && npm run build:prod
     staticPublishPath: ./frontend/dist
     envVars:
